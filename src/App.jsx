@@ -7,6 +7,7 @@ import Register from './pages/Register'
 import Onboarding from './pages/Onboarding'
 import Dashboard from './pages/Dashboard'
 import TodayWorkout from './pages/TodayWorkout'
+import WorkoutDetail from './pages/WorkoutDetail'
 import WorkoutPlan from './pages/WorkoutPlan'
 import Progress from './pages/Progress'
 import Nutrition from './pages/Nutrition'
@@ -32,6 +33,7 @@ export default function App() {
           <Route element={<RequireAuth />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/today-workout" element={<TodayWorkout />} />
+            <Route path="/today-workout/:workoutId" element={<WorkoutDetail />} />
             <Route path="/workout-plan" element={<WorkoutPlan />} />
             <Route path="/progress" element={<Progress />} />
             <Route path="/nutrition" element={<Nutrition />} />

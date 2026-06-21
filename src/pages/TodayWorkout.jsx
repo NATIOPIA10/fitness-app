@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Check, Lock, Play, PartyPopper } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Check, Lock, Play, PartyPopper, ChevronRight } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
 import Screen from '../components/Screen'
@@ -9,6 +10,7 @@ import LoadingScreen from '../components/LoadingScreen'
 
 export default function TodayWorkout() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [workouts, setWorkouts] = useState([])
   const [completedIds, setCompletedIds] = useState(new Set())
@@ -135,24 +137,32 @@ export default function TodayWorkout() {
                   )}
 
                   <div className="p-5">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <h3 className="font-display text-2xl leading-tight">{w.title}</h3>
-                      <div className="shrink-0 mt-1">
-                        {isDone ? (
-                          <div className="w-7 h-7 rounded-full bg-lime flex items-center justify-center">
-                            <Check size={16} className="text-ink" strokeWidth={3} />
-                          </div>
-                        ) : !isUnlocked ? (
-                          <div className="w-7 h-7 rounded-full bg-surface flex items-center justify-center">
-                            <Lock size={14} className="text-muted-2" />
-                          </div>
-                        ) : null}
+                    <button
+                      onClick={() => isUnlocked && navigate(`/today-workout/${w.id}`)}
+                      disabled={!isUnlocked}
+                      className="w-full text-left disabled:cursor-default"
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <h3 className="font-display text-2xl leading-tight">{w.title}</h3>
+                        <div className="shrink-0 mt-1 flex items-center gap-2">
+                          {isDone ? (
+                            <div className="w-7 h-7 rounded-full bg-lime flex items-center justify-center">
+                              <Check size={16} className="text-ink" strokeWidth={3} />
+                            </div>
+                          ) : !isUnlocked ? (
+                            <div className="w-7 h-7 rounded-full bg-surface flex items-center justify-center">
+                              <Lock size={14} className="text-muted-2" />
+                            </div>
+                          ) : (
+                            <ChevronRight size={20} className="text-muted" />
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    {w.description && (
-                      <p className="text-muted text-sm leading-relaxed mb-4">{w.description}</p>
-                    )}
+                      {w.description && (
+                        <p className="text-muted text-sm leading-relaxed mb-4">{w.description}</p>
+                      )}
+                    </button>
 
                     {w.video_url && isUnlocked && (
                       <a
