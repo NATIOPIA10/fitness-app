@@ -47,7 +47,7 @@ export default function Register() {
 
   if (needsConfirmation) {
     return (
-      <div className="min-h-screen bg-ink flex flex-col justify-center px-6 py-12">
+      <div className="min-h-screen bg-ink flex flex-col justify-center px-6 py-12" style={{ paddingLeft: 'max(1.5rem, env(safe-area-inset-left))', paddingRight: 'max(1.5rem, env(safe-area-inset-right))' }}>
         <div className="max-w-sm mx-auto w-full text-center">
           <div className="w-16 h-16 rounded-full bg-lime/10 flex items-center justify-center mx-auto mb-6">
             <span className="text-3xl">✉️</span>
@@ -66,7 +66,7 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen bg-ink flex flex-col justify-center px-6 py-12">
+    <div className="min-h-screen bg-ink flex flex-col justify-center px-6 py-12" style={{ paddingLeft: 'max(1.5rem, env(safe-area-inset-left))', paddingRight: 'max(1.5rem, env(safe-area-inset-right))' }}>
       <div className="max-w-sm mx-auto w-full">
         <p className="text-lime text-xs font-bold uppercase tracking-[0.2em] mb-2">Get started</p>
         <h1 className="font-display text-5xl mb-10">Create account</h1>

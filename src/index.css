@@ -19,6 +19,9 @@
 
 html {
   background: var(--color-ink);
+  height: 100%;
+  /* Prevent iOS Safari from auto-bumping font sizes in landscape/rotation */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -27,6 +30,12 @@ body {
   font-family: var(--font-body);
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* Crisper text rendering on both platforms */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 * {
@@ -37,9 +46,23 @@ body {
   display: none;
 }
 
+/* Smooth momentum scrolling on iOS */
+.overflow-y-auto,
+.overflow-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
 .font-display {
   font-family: var(--font-display);
   letter-spacing: 0.02em;
+}
+
+/* iOS Safari auto-zooms the page when a focused input's font-size is under
+   16px. Force every text input to 16px minimum so typing never triggers it. */
+input,
+select,
+textarea {
+  font-size: 16px;
 }
 
 /* Focus visibility for accessibility */
@@ -50,6 +73,14 @@ a:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--color-lime);
   outline-offset: 2px;
+}
+
+/* Buttons and links are touch targets, not text — disable text selection
+   so a long-press doesn't trigger the iOS/Android selection menu. */
+button,
+a {
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

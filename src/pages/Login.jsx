@@ -26,7 +26,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-ink flex flex-col justify-center px-6 py-12">
+    <div className="min-h-screen bg-ink flex flex-col justify-center px-6 py-12" style={{ paddingLeft: 'max(1.5rem, env(safe-area-inset-left))', paddingRight: 'max(1.5rem, env(safe-area-inset-right))' }}>
       <div className="max-w-sm mx-auto w-full">
         <p className="text-lime text-xs font-bold uppercase tracking-[0.2em] mb-2">Welcome back</p>
         <h1 className="font-display text-5xl mb-10">Sign in</h1>

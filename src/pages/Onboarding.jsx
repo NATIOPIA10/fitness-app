@@ -75,7 +75,7 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-ink flex flex-col px-6 py-10">
+    <div className="min-h-screen bg-ink flex flex-col px-6 py-10" style={{ paddingLeft: 'max(1.5rem, env(safe-area-inset-left))', paddingRight: 'max(1.5rem, env(safe-area-inset-right))' }}>
       <div className="max-w-sm mx-auto w-full flex-1 flex flex-col">
         {/* Progress dots */}
         <div className="flex gap-2 mb-8">

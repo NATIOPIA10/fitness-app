@@ -1,10 +1,22 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Check, Lock, Play, ChevronRight, ChevronLeft } from 'lucide-react'
+import { ArrowLeft, Check, Lock, Play, ChevronRight, ChevronLeft, Dumbbell } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
 import Button from '../components/Button'
 import LoadingScreen from '../components/LoadingScreen'
+
+// Splits a description like "3 sets x 10 reps. Keep your core tight..." into
+// a scannable lead stat ("3 sets x 10 reps") and the remaining form cue text,
+// so the most-needed number is easy to read at a glance during a workout.
+function splitDescription(text) {
+  if (!text) return { stat: null, rest: text }
+  const match = text.match(/^([^.]*\b(?:sets?|reps?|seconds?|minutes?|secs?|mins?)\b[^.]*)\.\s*(.*)$/i)
+  if (match && match[1].length < 60) {
+    return { stat: match[1].trim(), rest: match[2].trim() }
+  }
+  return { stat: null, rest: text }
+}
 
 export default function WorkoutDetail() {
   const { workoutId } = useParams()
@@ -100,8 +112,10 @@ export default function WorkoutDetail() {
     ? completedIds.has(nextWorkout.id) || dayWorkouts.findIndex((w) => !completedIds.has(w.id)) === index + 1
     : false
 
+  const { stat, rest } = splitDescription(workout.description)
+
   return (
-    <div className="min-h-screen bg-ink pb-12">
+    <div className="min-h-screen bg-ink" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 2rem)' }}>
       {/* Header / media */}
       <div className="relative">
         {workout.image_url ? (
@@ -114,13 +128,17 @@ export default function WorkoutDetail() {
 
         <button
           onClick={() => navigate('/today-workout')}
-          className="absolute top-5 left-5 w-11 h-11 rounded-full bg-ink/70 backdrop-blur flex items-center justify-center active:scale-95 transition-transform"
+          className="absolute left-5 w-11 h-11 rounded-full bg-ink/70 backdrop-blur flex items-center justify-center active:scale-95 transition-transform"
+          style={{ top: 'calc(env(safe-area-inset-top) + 1.25rem)' }}
           aria-label="Back to workout"
         >
           <ArrowLeft size={20} />
         </button>
 
-        <div className="absolute top-5 right-5 bg-ink/70 backdrop-blur rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide">
+        <div
+          className="absolute right-5 bg-ink/70 backdrop-blur rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide"
+          style={{ top: 'calc(env(safe-area-inset-top) + 1.25rem)' }}
+        >
           Step {index + 1} of {dayWorkouts.length}
         </div>
       </div>
@@ -145,12 +163,24 @@ export default function WorkoutDetail() {
           </div>
         )}
 
-        {workout.description && (
-          <div className="mb-6">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-muted mb-2">
+        {(stat || rest) && (
+          <div className="mb-6 bg-surface-raised border border-border rounded-2xl p-5">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">
               How to do it
             </h2>
-            <p className="text-text text-base leading-relaxed">{workout.description}</p>
+
+            {stat && (
+              <div className="inline-flex items-center gap-2 bg-lime/10 border border-lime/30 rounded-xl px-3.5 py-2 mb-4">
+                <Dumbbell size={15} className="text-lime shrink-0" />
+                <span className="font-display text-lg leading-none text-lime tracking-wide">
+                  {stat}
+                </span>
+              </div>
+            )}
+
+            {rest && (
+              <p className="text-text text-[17px] leading-[1.75]">{rest}</p>
+            )}
           </div>
         )}
 
@@ -186,7 +216,7 @@ export default function WorkoutDetail() {
           {prevWorkout ? (
             <button
               onClick={() => navigate(`/today-workout/${prevWorkout.id}`)}
-              className="flex-1 flex items-center gap-2 bg-surface-raised border border-border rounded-2xl px-4 py-3 active:scale-[0.98] transition-transform"
+              className="flex-1 min-h-[52px] flex items-center gap-2 bg-surface-raised border border-border rounded-2xl px-4 py-3 active:scale-[0.98] transition-transform"
             >
               <ChevronLeft size={18} className="text-muted shrink-0" />
               <div className="text-left overflow-hidden">
@@ -202,7 +232,7 @@ export default function WorkoutDetail() {
             <button
               onClick={() => nextIsUnlocked && navigate(`/today-workout/${nextWorkout.id}`)}
               disabled={!nextIsUnlocked}
-              className="flex-1 flex items-center justify-end gap-2 bg-surface-raised border border-border rounded-2xl px-4 py-3 active:scale-[0.98] transition-transform disabled:opacity-40"
+              className="flex-1 min-h-[52px] flex items-center justify-end gap-2 bg-surface-raised border border-border rounded-2xl px-4 py-3 active:scale-[0.98] transition-transform disabled:opacity-40"
             >
               <div className="text-right overflow-hidden">
                 <p className="text-[10px] text-muted uppercase tracking-wide">
